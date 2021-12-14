@@ -1,0 +1,50 @@
+body {
+  background-color: rgb(197, 197, 197);
+  margin-left: 100px;
+  margin-right: 100px;
+}
+
+header {
+  background-color: slategray;
+  padding: 30px;
+  text-align: left;
+  font-size: 4em;
+  font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+#images {
+  display: flex;
+  padding-top: 5%;
+}
+
+#images > div {
+  margin: auto;
+}
+
+img {
+  max-width: 200px;
+  max-height: 200px;
+}
+
+button {
+  margin-left: 45%;
+  margin-top: 2%;
+}
+
+div>p {
+  margin-left: 41%;
+  margin-top: 5%;
+  font-size: 18px;
+}
+
+section > ul {
+  margin-top: 2%;
+  text-align: center;
+  margin-left: 39%;
+  line-height: 150%;
+  margin-bottom: 10%;
+  font-size: 18px;
+  background-color: whitesmoke;
+  padding: 15px;
+  max-width: fit-content;
+}
