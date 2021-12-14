@@ -8,6 +8,7 @@ let container3 = document.querySelector('#image3>img');
 let list = document.querySelector('#list>ul')
 let button = document.querySelector('button');
 let removedEventListeners = false;
+let pastIndexes = [];
 
 function CreateProduct(source) {
   this.name = source.slice(4, source.length - 4);
@@ -45,13 +46,12 @@ function getRandomIndexes() {
   const indexes = [];
   while (indexes.length < 3) {
     let index = generateRandomNum();
-    if (!indexes.includes(index)) {
+    if (!indexes.includes(index) && !pastIndexes.includes(index)) {
       indexes.push(index);
     };
   }
   return indexes;
 };
-
 
 function removeEventListeners() {
   container1.removeEventListener('click', voteEventHandler);
@@ -59,7 +59,7 @@ function removeEventListeners() {
   container3.removeEventListener('click', voteEventHandler);
 }
 
-function eventHandler2(event) {
+function buttonEventHandler(event) {
   if (counter > 0) {
     let alert = document.querySelector('#button-spot>p');
     alert.textContent = 'You must finish voting before viewing the results.'
@@ -69,10 +69,9 @@ function eventHandler2(event) {
       li.textContent = (`${allProducts[i].name} had ${allProducts[i].selected} vote(s) and was shown ${allProducts[i].views} time(s).`);
       list.appendChild(li);
     };
-    button.removeEventListener('click', eventHandler2);
+    button.removeEventListener('click', buttonEventHandler);
   }
 }
-
 
 function renderPage() {
   if (counter === 0) {
@@ -83,16 +82,21 @@ function renderPage() {
     let alert = document.querySelector('div>p:first-child');
     alert.textContent = 'Voting Complete! Check your results down below';
   } else {
-    const indexes = getRandomIndexes();
-    container1.src = allProducts[indexes[0]].src;
-    container1.alt = allProducts[indexes[0]].name;
-    allProducts[indexes[0]].views += 1;
-    container2.src = allProducts[indexes[1]].src;
-    container2.alt = allProducts[indexes[1]].name;
-    allProducts[indexes[1]].views += 1;
-    container3.src = allProducts[indexes[2]].src;
-    container3.alt = allProducts[indexes[2]].name;
-    allProducts[indexes[2]].views += 1;
+    let indexes = getRandomIndexes();
+    pastIndexes = indexes;
+    let randomIndex0 = indexes[0];
+    let randomIndex1 = indexes[1];
+    let randomIndex2 = indexes[2];
+    container1.src = allProducts[randomIndex0].src;
+    container1.alt = allProducts[randomIndex0].name;
+    allProducts[randomIndex0].views += 1;
+    container2.src = allProducts[randomIndex1].src;
+    container2.alt = allProducts[randomIndex1].name;
+    allProducts[randomIndex1].views += 1;
+    container3.src = allProducts[randomIndex2].src;
+    container3.alt = allProducts[randomIndex2].name;
+    allProducts[randomIndex2].views += 1;
+    console.log(`randomIndexes: ${indexes}`)
   }
 };
 
@@ -111,10 +115,9 @@ function voteEventHandler(event) {
 container1.addEventListener('click', voteEventHandler);
 container2.addEventListener('click', voteEventHandler);
 container3.addEventListener('click', voteEventHandler);
-button.addEventListener('click', eventHandler2);
+button.addEventListener('click', buttonEventHandler);
 
 renderPage();
 
-
-
+ 
 
