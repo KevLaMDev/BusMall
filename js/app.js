@@ -156,6 +156,49 @@ container2.addEventListener('click', voteEventHandler);
 container3.addEventListener('click', voteEventHandler);
 button.addEventListener('click', buttonEventHandler);
 
+function persistObjs() {
+  if (!allProducts[0]) {
+    new CreateProduct('img/bag.jpg');
+    new CreateProduct('img/banana.jpg');
+    new CreateProduct('img/bathroom.jpg');
+    new CreateProduct('img/boots.jpg');
+    new CreateProduct('img/breakfast.jpg');
+    new CreateProduct('img/bubblegum.jpg');
+    new CreateProduct('img/chair.jpg');
+    new CreateProduct('img/cthulhu.jpg');
+    new CreateProduct('img/dog-duck.jpg');
+    new CreateProduct('img/dragon.jpg');
+    new CreateProduct('img/pen.jpg');
+    new CreateProduct('img/scissors.jpg');
+    new CreateProduct('img/shark.jpg');
+    new CreateProduct('img/sweep.png');
+    new CreateProduct('img/tauntaun.jpg');
+    new CreateProduct('img/unicorn.jpg');
+    new CreateProduct('img/water-can.jpg');
+    new CreateProduct('img/wine-glass.jpg');
+    new CreateProduct('img/pet-sweep.jpg');
+  } else {
+    let savedProducts = localStorage.getItem(products);
+    let parsedSavedProdcuts = parse(savedProducts);
+    for (let i = 0; i < parsedSavedProdcuts.length; i++) {
+      allProducts.push(parsedSavedProdcuts[i]);
+    }
+  }
+};
+// func persistObjs: control flow for instantiating objs or retaining preexisting ones
+// input: none
+// output: if no obj instances exist in allProducts array, instantiate objs
+// if (!allProducts[0]) instantiate objs
+// else access local storage data
+// let savedProducts = localStorage.getItem(products) <- this arg is a key to be named later when we are saving the data to begin with
+// savedProductsParsed = parse(savedProducts);
+// for loop to iterate thru savedProductsParsed
+// push each obj instance into allProducts array
+
+persistObjs();
+renderPage();
+
+
 renderPage();
 
  
