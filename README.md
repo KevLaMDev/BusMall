@@ -10,3 +10,7 @@
 ### attached event listeners to each image with an event handler to increment counters and re-render new unique images
 
 ## Class 12 - 12/14/21
+
+### add all functionality requirements for lab12:
+### replaced ul with a chart via chart.js library 
+### updated random index generator function to prevent the same images from being shown twice in a row.

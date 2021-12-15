@@ -5,10 +5,11 @@ let counter = 25;
 let container1 = document.querySelector('#image1>img');
 let container2 = document.querySelector('#image2>img');
 let container3 = document.querySelector('#image3>img');
-let list = document.querySelector('#list>ul')
+let ctx = document.getElementById('chart').getContext('2d');
 let button = document.querySelector('button');
 let removedEventListeners = false;
-let pastIndexes = [];
+let pastIndexes = []; 
+
 
 function CreateProduct(source) {
   this.name = source.slice(4, source.length - 4);
@@ -38,6 +39,41 @@ new CreateProduct('img/water-can.jpg');
 new CreateProduct('img/wine-glass.jpg');
 new CreateProduct('img/pet-sweep.jpg');
 
+const chartData = {
+  type: 'bar',
+  data: {
+      labels: [],
+      datasets: [{
+          label: '# of Votes',
+          data: [],
+          backgroundColor: [
+              'rgba(255, 99, 132)',
+              'rgba(54, 162, 235)',
+              'rgba(255, 206, 86)',
+              'rgba(75, 192, 192)',
+              'rgba(153, 102, 255)',
+              'rgba(255, 159, 64)'
+          ],
+          borderColor: [
+              'rgba(255, 99, 132, 1)',
+              'rgba(54, 162, 235, 1)',
+              'rgba(255, 206, 86, 1)',
+              'rgba(75, 192, 192, 1)',
+              'rgba(153, 102, 255, 1)',
+              'rgba(255, 159, 64, 1)'
+          ],
+          borderWidth: 1
+      }]
+  },
+  options: {
+      scales: {
+          y: {
+              beginAtZero: true
+          }
+      }
+  }
+};
+
 function generateRandomNum() {
   return Math.floor(Math.random() * allProducts.length); //The maximum is exclusive and the minimum is inclusive
 }
@@ -64,11 +100,16 @@ function buttonEventHandler(event) {
     let alert = document.querySelector('#button-spot>p');
     alert.textContent = 'You must finish voting before viewing the results.'
   } else {
+    let productNames = [];
+    let votes = [];
     for (let i = 0; i < allProducts.length; i++) {
-      let li = document.createElement('li');
-      li.textContent = (`${allProducts[i].name} had ${allProducts[i].selected} vote(s) and was shown ${allProducts[i].views} time(s).`);
-      list.appendChild(li);
-    };
+      productNames.push(allProducts[i].name);
+      votes.push(allProducts[i].selected);
+    }
+    chartData.data.labels = productNames;
+    chartData.data.datasets[0].data = votes;
+    console.log(`productNames = ${chartData.labels}, votes = ${chartData.data}`)
+    new Chart(ctx, chartData);
     button.removeEventListener('click', buttonEventHandler);
   }
 }
@@ -96,7 +137,6 @@ function renderPage() {
     container3.src = allProducts[randomIndex2].src;
     container3.alt = allProducts[randomIndex2].name;
     allProducts[randomIndex2].views += 1;
-    console.log(`randomIndexes: ${indexes}`)
   }
 };
 
@@ -106,7 +146,6 @@ function voteEventHandler(event) {
   for (let i = 0; i < allProducts.length; i++) {
     if (productClicked === allProducts[i].name) {
       allProducts[i].selected++;
-      console.log(`${allProducts[i].name} selection incremented`)
     }
   }
   renderPage();
