@@ -5,9 +5,11 @@ let counter = 25;
 let container1 = document.querySelector('#image1>img');
 let container2 = document.querySelector('#image2>img');
 let container3 = document.querySelector('#image3>img');
-let list = document.querySelector('#list>ul')
+let ctx = document.getElementById('chart').getContext('2d');
 let button = document.querySelector('button');
 let removedEventListeners = false;
+let pastIndexes = []; 
+
 
 function CreateProduct(source) {
   this.name = source.slice(4, source.length - 4);
@@ -37,6 +39,41 @@ new CreateProduct('img/water-can.jpg');
 new CreateProduct('img/wine-glass.jpg');
 new CreateProduct('img/pet-sweep.jpg');
 
+const chartData = {
+  type: 'bar',
+  data: {
+      labels: [],
+      datasets: [{
+          label: '# of Votes',
+          data: [],
+          backgroundColor: [
+              'rgba(255, 99, 132)',
+              'rgba(54, 162, 235)',
+              'rgba(255, 206, 86)',
+              'rgba(75, 192, 192)',
+              'rgba(153, 102, 255)',
+              'rgba(255, 159, 64)'
+          ],
+          borderColor: [
+              'rgba(255, 99, 132, 1)',
+              'rgba(54, 162, 235, 1)',
+              'rgba(255, 206, 86, 1)',
+              'rgba(75, 192, 192, 1)',
+              'rgba(153, 102, 255, 1)',
+              'rgba(255, 159, 64, 1)'
+          ],
+          borderWidth: 1
+      }]
+  },
+  options: {
+      scales: {
+          y: {
+              beginAtZero: true
+          }
+      }
+  }
+};
+
 function generateRandomNum() {
   return Math.floor(Math.random() * allProducts.length); //The maximum is exclusive and the minimum is inclusive
 }
@@ -45,13 +82,12 @@ function getRandomIndexes() {
   const indexes = [];
   while (indexes.length < 3) {
     let index = generateRandomNum();
-    if (!indexes.includes(index)) {
+    if (!indexes.includes(index) && !pastIndexes.includes(index)) {
       indexes.push(index);
     };
   }
   return indexes;
 };
-
 
 function removeEventListeners() {
   container1.removeEventListener('click', voteEventHandler);
@@ -59,20 +95,24 @@ function removeEventListeners() {
   container3.removeEventListener('click', voteEventHandler);
 }
 
-function eventHandler2(event) {
+function buttonEventHandler(event) {
   if (counter > 0) {
     let alert = document.querySelector('#button-spot>p');
     alert.textContent = 'You must finish voting before viewing the results.'
   } else {
+    let productNames = [];
+    let votes = [];
     for (let i = 0; i < allProducts.length; i++) {
-      let li = document.createElement('li');
-      li.textContent = (`${allProducts[i].name} had ${allProducts[i].selected} vote(s) and was shown ${allProducts[i].views} time(s).`);
-      list.appendChild(li);
-    };
-    button.removeEventListener('click', eventHandler2);
+      productNames.push(allProducts[i].name);
+      votes.push(allProducts[i].selected);
+    }
+    chartData.data.labels = productNames;
+    chartData.data.datasets[0].data = votes;
+    console.log(`productNames = ${chartData.labels}, votes = ${chartData.data}`)
+    new Chart(ctx, chartData);
+    button.removeEventListener('click', buttonEventHandler);
   }
 }
-
 
 function renderPage() {
   if (counter === 0) {
@@ -83,16 +123,20 @@ function renderPage() {
     let alert = document.querySelector('div>p:first-child');
     alert.textContent = 'Voting Complete! Check your results down below';
   } else {
-    const indexes = getRandomIndexes();
-    container1.src = allProducts[indexes[0]].src;
-    container1.alt = allProducts[indexes[0]].name;
-    allProducts[indexes[0]].views += 1;
-    container2.src = allProducts[indexes[1]].src;
-    container2.alt = allProducts[indexes[1]].name;
-    allProducts[indexes[1]].views += 1;
-    container3.src = allProducts[indexes[2]].src;
-    container3.alt = allProducts[indexes[2]].name;
-    allProducts[indexes[2]].views += 1;
+    let indexes = getRandomIndexes();
+    pastIndexes = indexes;
+    let randomIndex0 = indexes[0];
+    let randomIndex1 = indexes[1];
+    let randomIndex2 = indexes[2];
+    container1.src = allProducts[randomIndex0].src;
+    container1.alt = allProducts[randomIndex0].name;
+    allProducts[randomIndex0].views += 1;
+    container2.src = allProducts[randomIndex1].src;
+    container2.alt = allProducts[randomIndex1].name;
+    allProducts[randomIndex1].views += 1;
+    container3.src = allProducts[randomIndex2].src;
+    container3.alt = allProducts[randomIndex2].name;
+    allProducts[randomIndex2].views += 1;
   }
 };
 
@@ -102,7 +146,6 @@ function voteEventHandler(event) {
   for (let i = 0; i < allProducts.length; i++) {
     if (productClicked === allProducts[i].name) {
       allProducts[i].selected++;
-      console.log(`${allProducts[i].name} selection incremented`)
     }
   }
   renderPage();
@@ -111,10 +154,9 @@ function voteEventHandler(event) {
 container1.addEventListener('click', voteEventHandler);
 container2.addEventListener('click', voteEventHandler);
 container3.addEventListener('click', voteEventHandler);
-button.addEventListener('click', eventHandler2);
+button.addEventListener('click', buttonEventHandler);
 
 renderPage();
 
-
-
+ 
 
