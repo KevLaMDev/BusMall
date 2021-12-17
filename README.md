@@ -1,6 +1,6 @@
 # BusMall
 
-### BusMall is a product testing application which allows users to vote on products they would be most likely to purchase, and after testing is completed generates a chart with the data of how many times each product image was shown and select. The app generates a set of three random product images, one of which is selected by the users via click. The user's data is saved to their local storage, and is accessed everytime the site is used. 
+### BusMall is a product testing application which allows users to vote on products they would be most likely to purchase, and after testing is completed generates a chart with the data of how many times each product image was shown and selected. The app generates a set of three random product images, one of which is selected by the users via click. The user's data is saved to their local storage, and is accessed everytime the site is used. 
 
 ## Class 11 - 12/13/21
 
